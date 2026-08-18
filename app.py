@@ -2,13 +2,18 @@
 
 Run:
 
-    pip install streamlit scipy pandas numpy nbformat
+    pip install streamlit scipy pandas numpy nbformat folium streamlit-folium
     streamlit run app.py
 
 The top nav exposes the App (dispatcher workspace with Live Dialog / Scripts
-modes), Visualization, and Model Playground pages. The App page loads the shared
-hydrant database and dispatches to the dispatcher-oriented Live Dialog or the
-technical Scripts interface, both operating on the same ``st.session_state``.
+modes), Transcript Analyzer, Visualization, and Model Playground pages. 
+
+The App page loads the shared hydrant database and dispatches to the 
+dispatcher-oriented Live Dialog or the technical Scripts interface, both 
+operating on the same ``st.session_state``.
+
+The Transcript Analyzer page processes radio talk group transcripts to extract
+water requests and track hydrant availability.
 
 The dialog (chat history) is cleared whenever the dispatcher switches mode or
 navigates to a different page, while the committed incident plan is preserved.
@@ -20,6 +25,7 @@ from data import get_hydrants
 from ui.live_dialog import render_live_dialog
 from ui.scripts import render_scripts
 from ui.workspace import clear_dialog
+from transcript_analyzer_page import render_transcript_analyzer
 
 st.set_page_config(page_title="Hydrant recommender", layout="wide")
 
@@ -47,6 +53,7 @@ def app_page():
 pg = st.navigation(
     [
         st.Page(app_page, title="App", default=True),
+        st.Page(render_transcript_analyzer, title="📻 Transcript Analyzer"),
         st.Page("visualization_page.py", title="Visualization"),
         st.Page("model_playground_page.py", title="Model Playground"),
     ],
